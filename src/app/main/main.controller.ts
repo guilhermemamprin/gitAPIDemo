@@ -11,53 +11,54 @@ module testApp {
       this.login = login;
       this.avatar_url = avatar_url;
       this.html_url = html_url;
-      
+
     }
   }
 
   export class MainController {
     public awesomeThings: Thing[];
-
     public search: string;
-
     private pendingTask: any;
     private $http: any;
 
-    getAllUsers() {
+    updateGrid(response) {
       var _this = this;
-      var data
-      this.$http.get("https://api.github.com/users")
-        .then(function(response) {
-            _this.awesomeThings = new Array<Thing>();
-
-            response.data.forEach(function(awesomeThing: Thing) {
-              _this.awesomeThings.push(awesomeThing);
-            });
+        this.awesomeThings = new Array<Thing>();
+        _.forEach(response.data, function(awesomeThing: Thing) {
+            _this.awesomeThings.push(awesomeThing);
         });
     }
 
-    fetchUser() {
-      var awesomeThings;
-      var _this = this;
-      if (this.search.length <= 0) {
-        this.getAllUsers();
-        return;
-      }
-      this.$http.get("https://api.github.com/search/users?q=" + this.search)
-        .then(function(response) {
-            awesomeThings = response.data.items;
-            _this.awesomeThings = new Array<Thing>();
+    getAllUsers() {
+        var _this = this;
+        var data
+        this.$http.get("https://api.github.com/users")
+            .then(function(response){_this.updateGrid(response)});
+    }
 
-            awesomeThings.forEach(function(awesomeThing: Thing) {
-              _this.awesomeThings.push(awesomeThing);
-            });
+    fetchUser() {
+        var awesomeThings;
+        var _this = this;
+        if (this.search.length <= 0) {
+            this.getAllUsers();
+            return;
+        }
+        this.$http.get("https://api.github.com/search/users?q=" + this.search)
+            .then(function(response) {
+                awesomeThings = response.data.items;
+                _this.awesomeThings = new Array<Thing>();
+
+                awesomeThings.forEach(function(profile: Thing) {
+                  _this.awesomeThings.push(profile);
+
+                });
         });
     }
 
     change(){
       if (this.pendingTask) {
         clearTimeout(this.pendingTask);
-      }      
+      }
       this.pendingTask = setTimeout(this.fetchUser(), 1000);
     }
 

@@ -18,14 +18,14 @@ module testApp {
         url: '/',
         templateUrl: 'app/main/main.html',
         controller: 'MainController',
-        controllerAs: 'main'
+        controllerAs: 'main',
       })
 
       .state('about', {
-        url: '/about', 
+        url: '/about',
         templateUrl: 'app/about/about.html',
         controller: 'AboutController',
-        controllerAs: 'about'
+        controllerAs: 'about',
       });
 
     $urlRouterProvider.otherwise('/');

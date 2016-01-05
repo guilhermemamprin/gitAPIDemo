@@ -3,13 +3,16 @@ module testApp {
 
   export class NavbarController {
     public date: Date;
+    public controller;
+    public $state;
+
+    isActive(viewLocation) {
+      return this.$state.includes(viewLocation);
+    }
 
     /* @ngInject */
-    constructor () {
-      var vm = this;
-
-      vm.date = new Date();
-    }
+    constructor ($state) {
+      this.$state = $state;    }
   }
 
 }
