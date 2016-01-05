@@ -1,0 +1,28 @@
+.container
+    div(ng-include src="'app/components/navbar/navbar.html'")
+    .jumbotron.text-center
+      h1 About
+      p.lead
+        img(src='assets/images/jade.png', alt="Jade templating")
+        br
+        |       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi bibendum condimentum ultrices. In quis odio vel velit imperdiet semper. Integer a tellus vel metus fermentum rhoncus nec faucibus ante. Vivamus ac viverra nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam at leo feugiat nulla tristique cursus. Donec vel viverra felis, tristique dapibus diam. Ut commodo nulla porta urna vehicula lobortis. Aenean mattis suscipit ipsum iaculis convallis. Duis sollicitudin ante et tincidunt facilisis.
+
+
+      p
+        a.btn.btn-lg.btn-success(ng-href='#') Splendid!
+    .row
+      .col-sm-6.col-md-4(ng-repeat="awesomeThing in about.awesomeThings | orderBy:'rank'")
+        img.pull-right(ng-src='assets/images/{{awesomeThing.logo}}', alt='{{awesomeThing.title}}')
+        .caption
+          h3 {{awesomeThing.title}}
+          p {{awesomeThing.description}}
+          p
+            a(ng-href='{{awesomeThing.url}}') {{awesomeThing.url}}
+
+          .col-md-12(ng-if="awesomeThing.img_url")
+            img(ng-src="{{awesomeThing.img_url}}" class="button")
+    hr
+    .footer
+      p
+        | With &hearts; from 
+        a(href='https://twitter.com/Swiip') @Swiip
