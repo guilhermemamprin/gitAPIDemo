@@ -1,2 +1,3 @@
-# gitFun
-fooling around with GitHub's API and Angular
+# git API Demo
+
+Exploring functionalities of GitHub's API using AngularJS
