@@ -2,7 +2,9 @@
 
 /// <reference path="main/main.controller.ts" />
 /// <reference path="about/about.controller.ts" />
+/// <reference path="issues/issues.controller.ts" />
 /// <reference path="repositories/repositories.controller.ts" />
+/// <reference path="repositoryProfile/repositoryProfile.controller.ts" />
 /// <reference path="auth/auth.controller.ts" />
 /// <reference path="../app/components/navbar/navbar.controller.ts" />
 
@@ -15,6 +17,8 @@ module testApp {
     .controller('AboutController', AboutController)
     .controller('RepositoriesController', RepositoriesController)
     .controller('AuthController', AuthController)
+    .controller('IssuesController', IssuesController)
+    .controller('RepositoryProfileController', RepositoryProfileController)
 
   .config(function ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $locationProvider) {
     $stateProvider
@@ -37,6 +41,21 @@ module testApp {
         templateUrl: 'app/repositories/repositories.html',
         controller: 'RepositoriesController',
         controllerAs: 'repositories',
+      })
+
+       .state('repositoryProfile', {
+        url: '/repositoryProfile?full_name',
+        templateUrl: 'app/repositoryProfile/repositoryProfile.html',
+        controller: 'RepositoryProfileController',
+        controllerAs: 'profile',
+      })
+
+
+      .state('issues', {
+        url: '/issues',
+        templateUrl: 'app/issues/issues.html',
+        controller: 'IssuesController',
+        controllerAs: 'issues',
       })
 
       .state('/auth', {

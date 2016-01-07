@@ -23,6 +23,8 @@
             h4 {{awesomeThing.name}}
             p Owner: {{awesomeThing.owner.login}}
             p
+              a( ui-sref='repositoryProfile({full_name : awesomeThing.full_name })') View Profile
+            p
               a( ng-href = "{{awesomeThing.html_url}}") GitHub Link
 
 

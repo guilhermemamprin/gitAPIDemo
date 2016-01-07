@@ -1,7 +1,7 @@
 module testApp {
   'use strict';
 
-  class Thing {
+  class Issue {
     public rank: number;
     public login: string;
     public avatar_url: string;
@@ -15,41 +15,43 @@ module testApp {
     }
   }
 
-  export class RepositoriesController {
-    public awesomeThings: Thing[];
+  export class IssuesController {
+    public issues: Issue[];
     public search: string;
     private pendingTask: any;
     private $http: any;
 
     updateGrid(response) {
       var _this = this;
-        this.awesomeThings = new Array<Thing>();
-        _.forEach(response.data, function(awesomeThing: Thing) {
-            _this.awesomeThings.push(awesomeThing);
+        this.issues = new Array<Issue>();
+        _.forEach(response.data, function(issue: Issue) {
+            _this.issues.push(issue);
         });
     }
 
-    getAllUsers() {
+    getAllIssues() {
         var _this = this;
         var data;
-        this.$http.get("https://api.github.com/repositories" + "?" + window.localStorage.getItem("authToken"))
-            .then(function(response){_this.updateGrid(response)});
+        this.$http.get("https://api.github.com/user/repos" )
+            .then(function(response){
+              _this.updateGrid(response);
+            });
     }
 
     fetchUser() {
-        var awesomeThings;
+        var issues;
         var _this = this;
         if (this.search.length <= 0) {
-            this.getAllUsers();
+            this.getAllIssues();
             return;
         }
-        this.$http.get("https://api.github.com/search/repositories?q=" + this.search + "&" + window.localStorage.getItem("authToken"))
+        this.$http.get("https://api.github.com/search/users?q=" + this.search)
             .then(function(response) {
-                awesomeThings = response.data.items;
-                _this.awesomeThings = new Array<Thing>();
+                issues = response.data.items;
+                _this.issues = new Array<Issue>();
 
-                awesomeThings.forEach(function(profile: Thing) {
-                  _this.awesomeThings.push(profile);
+                issues.forEach(function(profile: Issue) {
+                  _this.issues.push(profile);
 
                 });
         });
@@ -66,13 +68,13 @@ module testApp {
     /* @ngInject */
     constructor ($scope, $http) {
       var vm = this;
-      var awesomeThings = [];
+      var issues = [];
       var pendingTask;
 
       this.$http = $http;
 
       if(this.search === undefined){
-        this.getAllUsers();
+        this.getAllIssues();
       }
     }
   }

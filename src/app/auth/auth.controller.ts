@@ -15,8 +15,6 @@ module testApp {
           window.localStorage.setItem("authToken", response.data);
           $window.location.href = '/';
         })
-
-
       }
 
 
