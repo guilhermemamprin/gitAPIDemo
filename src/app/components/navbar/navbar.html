@@ -9,7 +9,10 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav">
         <li ng-class="{ active: navbar.isActive('home')}"><a ui-sref='home'>Home</a></li>
-        <li ng-class="{ active: navbar.isActive('about')}" ><a ui-sref='about'>About</a></li>
+        <li ng-class="{ active: navbar.isActive('repositories')}" ><a ui-sref='repositories'>Repositories</a></li>
+         <li ng-class="{ active: navbar.isActive('about')}" ><a ui-sref='about'>About</a></li>
+
+         <li > <a class="btn btn-default" ng-href="https://github.com/login/oauth/authorize?client_id=2e5699877d1e6044b10a&scope=repo" >Authorize</a></li>
         <li><a ng-href="#">Contact</a></li>
       </ul>
 

@@ -5,14 +5,19 @@ module testApp {
     public date: Date;
     public controller;
     public $state;
+    public authSet: boolean = true;
 
     isActive(viewLocation) {
       return this.$state.includes(viewLocation);
     }
 
     /* @ngInject */
-    constructor ($state) {
-      this.$state = $state;    }
+    constructor ($state, $scope) {
+      this.$state = $state;
+      if (window.localStorage.getItem('authToken') == null) {
+        this.authSet = false;
+      }
+    }
   }
 
 }

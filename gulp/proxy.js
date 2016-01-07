@@ -1,59 +1,86 @@
- /*jshint unused:false */
+// node.js proxy server example for adding CORS headers to any existing http services.
+// yes, i know this is super basic, that's why it's here. use this to help understand how http-proxy works with express if you need future routing capabilities
 
-/***************
+var express   = require('express'),
+    proxy     = require('express-http-proxy'),
+    url       = require('url');
 
-  This file allow to configure a proxy system plugged into BrowserSync
-  in order to redirect backend requests while still serving and watching
-  files from the web project
+var allowedHeaders = [
+    'Accept',
+    'Authorization',
+    'AuthTicket',
+    'Content-Type',
+    'Origin',
+    'Referer',
+    'User-Agent',
+    'X-Mindflash-SessionID',
+    'X-Requested-With',
 
-  IMPORTANT: The proxy is disabled by default.
+    // MW-CNova custom headers
+    'X-Auth-CarrinhoToken',
+    'X-Auth-ClienteId',
+    'X-Auth-UsuarioToken'
+  ].toString();
 
-  If you want to enable it, watch at the configuration options and finally
-  change the `module.exports` at the end of the file
+var allowCrossDomain = function(req, res, next) {
 
-***************/
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', allowedHeaders);
 
-'use strict';
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.sendStatus(200);
+    }
+    else {
+      next();
+    }
+};
 
-var httpProxy = require('http-proxy');
-var chalk = require('chalk');
+function createProxy(port, proxyUrl) {
 
-/*
- * Location of your backend server
- */
-var proxyTarget = 'http://server/context/';
+  var proxyParams = {
+    forwardPath: function(req, res) {
+      var parsedPath = url.parse(req.url).path;
 
-var proxy = httpProxy.createProxyServer({
-  target: proxyTarget
-});
+      return parsedPath;
+    },
+    intercept: function(rsp, data, req, res, callback) {
+       // rsp - original response from the target
+       // data = JSON.parse(data.toString('utf8'));
 
-proxy.on('error', function(error, req, res) {
-  res.writeHead(500, {
-    'Content-Type': 'text/plain'
-  });
-
-  console.error(chalk.red('[Proxy]'), error);
-});
-
-/*
- * The proxy middleware is an Express middleware added to BrowserSync to
- * handle backend request and proxy them to your backend.
- */
-function proxyMiddleware(req, res, next) {
-  /*
-   * This test is the switch of each request to determine if the request is
-   * for a static file to be handled by BrowserSync or a backend request to proxy.
-   *
-   * The existing test is a standard check on the files extensions but it may fail
-   * for your needs. If you can, you could also check on a context in the url which
-   * may be more reliable but can't be generic.
-   */
-  if (/\.(html|css|js|png|jpg|jpeg|gif|ico|xml|rss|txt|eot|svg|ttf|woff|woff2|cur)(\?((r|v|rel|rev)=[\-\.\w]*)?)?$/.test(req.url)) {
-    next();
-  } else {
-    proxy.web(req, res);
+       res.header('Access-Control-Allow-Origin', req.headers.origin);
+       if (res._headers['set-cookie']) {
+        for (var i = 0; i < res._headers['set-cookie'].length; i++) {
+          res._headers['set-cookie'][i] = res._headers['set-cookie'][i].replace(/domain=\.?extra\.com\.br;?\s?/gi, '');
+        }
+       }
+       callback(null, data);
+    },
+    decorateRequest: function(req) {
+      var caseSensitive = [
+        "X-Auth-UsuarioToken",
+        "X-Auth-ClienteId",
+        "X-Auth-CarrinhoToken"
+      ];
+      for (var i = 0; i < caseSensitive.length; i++) {
+        if (req.headers[caseSensitive[i].toLowerCase()] != null) {
+          req.headers[caseSensitive[i]] = req.headers[caseSensitive[i].toLowerCase()];
+          delete req.headers[caseSensitive[i].toLowerCase()];
+        }
+      }
+      return req;
+    }
   }
+
+  var middlewareProxy = express();
+  middlewareProxy.use(allowCrossDomain);
+  middlewareProxy.all('/*', proxy(proxyUrl, proxyParams));
+  middlewareProxy.listen(port);
 }
+
+createProxy(5000, 'https://github.com')
 
 /*
  * This is where you activate or not your proxy.
@@ -61,7 +88,7 @@ function proxyMiddleware(req, res, next) {
  * The first line activate if and the second one ignored it
  */
 
-//module.exports = [proxyMiddleware];
+// module.exports = [proxyMiddleware];
 module.exports = function() {
   return [];
-};
+}

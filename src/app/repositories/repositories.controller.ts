@@ -15,7 +15,7 @@ module testApp {
     }
   }
 
-  export class MainController {
+  export class RepositoriesController {
     public awesomeThings: Thing[];
     public search: string;
     private pendingTask: any;
@@ -32,7 +32,7 @@ module testApp {
     getAllUsers() {
         var _this = this;
         var data;
-        this.$http.get("https://api.github.com/users")
+        this.$http.get("https://api.github.com/repositories")
             .then(function(response){_this.updateGrid(response)});
     }
 
@@ -43,7 +43,7 @@ module testApp {
             this.getAllUsers();
             return;
         }
-        this.$http.get("https://api.github.com/search/users?q=" + this.search)
+        this.$http.get("https://api.github.com/search/repositories?q=" + this.search)
             .then(function(response) {
                 awesomeThings = response.data.items;
                 _this.awesomeThings = new Array<Thing>();
