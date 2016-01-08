@@ -34,6 +34,14 @@ module testApp {
         .then(function(response) {
           $scope.repository = response.data;
       });
+
+     $http.get("https://api.github.com/repos/" + full_name + "/issues?per_page=6&" + $window.localStorage.getItem("authToken"))
+      .then(function(response) {
+        $scope.issues = response.data;
+      });
+
+
+
     }
   }
 }

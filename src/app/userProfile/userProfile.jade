@@ -17,6 +17,7 @@
             h6 {{user.email}}
 
 
+
             h6 Public Repositories : {{user.public_repos}}
               a(href="{{user.homepage}}") &nbsp;{{user.homepage}}
             .row
@@ -35,7 +36,7 @@
               .list-group-item(ng-repeat="repo in repos ")
                 a( ui-sref='repositoryProfile({full_name : repo.full_name})') {{repo.name}}
               .list-group-item
-                .text-primary More...
+                a(href='{{user.html_url}}?tab=repositories').text-primary More...
       .row
         h3 Organizations
         .col-sm-6.col-md-4(ng-repeat="org in orgs | orderBy:'rank'")

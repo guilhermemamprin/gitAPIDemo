@@ -11,13 +11,13 @@
 
       .container-fluid.well.span6
         .row-fluid
-          .span5.pull-left
+          .col-md-3
             img.img-circle(src="{{repository.owner.avatar_url}}" style="height: 100px; width: 100px")
             br
             h6 Owner : {{repository.owner.login}}
             br
             br
-          .span8
+          .col-md-6
             h3 {{repository.name}}
             h6 Homepage :
               a(href="{{repository.homepage}}") &nbsp;{{repository.homepage}}
@@ -34,6 +34,20 @@
               |  Watchers : {{repository.watchers}}
             h6
               a(href="{{repository.html_url}}") More...
+          .col-md-3
+            h4 Issues &nbsp;
+              a(href='#').btn.btn-success New issue
+
+            .list-group-item(ng-repeat="issue in issues ")
+              i.glyphicon.glyphicon-exclamation-sign &nbsp;
+              b {{issue.state}}
+              br
+              a(href='{{issue.html_url}}') {{issue.title}}
+
+            .list-group-item
+              a(href='{{repository.html_url}}/issues').text-primary More...
+
+
 
 
 
