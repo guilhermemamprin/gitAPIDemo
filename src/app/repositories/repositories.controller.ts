@@ -18,8 +18,10 @@ module testApp {
   export class RepositoriesController {
     public awesomeThings: Thing[];
     public search: string;
+    public filter: string;
     private pendingTask: any;
     private $http: any;
+    private $window: any;
 
     updateGrid(response) {
       var _this = this;
@@ -29,51 +31,75 @@ module testApp {
         });
     }
 
-    getAllUsers() {
-        var _this = this;
-        var data;
-        this.$http.get("https://api.github.com/repositories" + "?" + window.localStorage.getItem("authToken"))
-            .then(function(response){_this.updateGrid(response)});
+    updateGridItems(response) {
+      var awesomeThings;
+      var _this = this;
+      awesomeThings = response.data.items;
+      this.awesomeThings = new Array<Thing>();
+
+      awesomeThings.forEach(function(profile: Thing) {
+        _this.awesomeThings.push(profile);
+      });
     }
 
-    fetchUser() {
+    getAllRepos() {
+        var _this = this;
+        var data;
+        if (angular.element("#filter").val() === "all") {
+          this.$http.get("https://api.github.com/repositories" + "?" + window.localStorage.getItem("authToken"))
+            .then(function(response){_this.updateGrid(response)});
+        } else {
+          var username = this.$window.localStorage.getItem("username");
+          this.$http.get("https://api.github.com/search/repositories?q=user:" + username + "&" + window.localStorage.getItem("authToken"))
+            .then(function(response){_this.updateGridItems(response)});
+
+        }
+    }
+
+    fetchRepositories() {
         var awesomeThings;
         var _this = this;
         if (this.search.length <= 0) {
-            this.getAllUsers();
+            this.getAllRepos();
             return;
         }
-        this.$http.get("https://api.github.com/search/repositories?q=" + this.search + "&" + window.localStorage.getItem("authToken"))
+        if (angular.element("#filter").val() === "all") {
+          this.$http.get("https://api.github.com/search/repositories?q=" + this.search + "&" + window.localStorage.getItem("authToken"))
             .then(function(response) {
-                awesomeThings = response.data.items;
-                _this.awesomeThings = new Array<Thing>();
+                _this.updateGridItems(response);
+            });
+        } else {
+          var username = this.$window.localStorage.getItem("username");
+          this.$http.get("https://api.github.com/search/repositories?q=user:" + username + "+"  + this.search + "&" + window.localStorage.getItem("authToken"))
+            .then(function(response) {
+                _this.updateGridItems(response);
+            });
+        }
 
-                awesomeThings.forEach(function(profile: Thing) {
-                  _this.awesomeThings.push(profile);
-
-                });
-        });
     }
 
-    change(){
+    inputChange(){
       if (this.pendingTask) {
         clearTimeout(this.pendingTask);
       }
-      this.pendingTask = setTimeout(this.fetchUser(), 1000);
+      this.pendingTask = setTimeout(this.fetchRepositories(), 1000);
     }
 
 
     /* @ngInject */
-    constructor ($scope, $http) {
+    constructor ($scope, $http, $window) {
       var vm = this;
       var awesomeThings = [];
       var pendingTask;
+      this.$window = window;
 
       this.$http = $http;
-
+      this.filter = "all"
       if(this.search === undefined){
-        this.getAllUsers();
+        this.search = ""
+        this.getAllRepos();
       }
+
     }
   }
 

@@ -5,6 +5,7 @@
 /// <reference path="issues/issues.controller.ts" />
 /// <reference path="repositories/repositories.controller.ts" />
 /// <reference path="repositoryProfile/repositoryProfile.controller.ts" />
+/// <reference path="userProfile/userProfile.controller.ts" />
 /// <reference path="auth/auth.controller.ts" />
 /// <reference path="../app/components/navbar/navbar.controller.ts" />
 
@@ -19,6 +20,7 @@ module testApp {
     .controller('AuthController', AuthController)
     .controller('IssuesController', IssuesController)
     .controller('RepositoryProfileController', RepositoryProfileController)
+    .controller('UserProfileController', UserProfileController)
 
   .config(function ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $locationProvider) {
     $stateProvider
@@ -48,6 +50,13 @@ module testApp {
         templateUrl: 'app/repositoryProfile/repositoryProfile.html',
         controller: 'RepositoryProfileController',
         controllerAs: 'profile',
+      })
+
+       .state('userProfile', {
+        url: '/userProfile?login',
+        templateUrl: 'app/userProfile/userProfile.html',
+        controller: 'UserProfileController',
+        controllerAs: 'userProfile',
       })
 
 

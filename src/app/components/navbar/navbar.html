@@ -1,19 +1,20 @@
 <nav class="navbar navbar-static-top navbar-inverse" ng-controller="NavbarController as navbar">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="https://github.com/Swiip/generator-gulp-angular">
-        <span class="glyphicon glyphicon-home"></span> Gulp Angular
+      <a class="navbar-brand" ui-sref="userProfile({login : $window.localStorage.getItem('username')}) ">
+        <span class="glyphicon glyphicon-home"></span> Home
       </a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav">
-        <li ng-class="{ active: navbar.isActive('home')}"><a ui-sref='home'>Home</a></li>
+        <li ng-class="{ active: navbar.isActive('home')}"><a ui-sref='home'>Profiles</a></li>
         <li ng-class="{ active: navbar.isActive('repositories')}" ><a ui-sref='repositories'>Repositories</a></li>
          <li ng-class="{ active: navbar.isActive('about')}" ><a ui-sref='about'>About</a></li>
          <li ng-class="{ active: navbar.isActive('issues')}" ><a ui-sref='issues'>Issues</a></li>
 
-         <li > <a class="btn btn-default" ng-href="https://github.com/login/oauth/authorize?client_id=2e5699877d1e6044b10a&scope=repo" >Authorize</a></li>
+         <li > <a class="btn btn-default" href="https://github.com/login/oauth/authorize?client_id=2e5699877d1e6044b10a&scope=repo,read:org" >Authorize</a></li>
+
         <!-- <li><a ng-href="#">Contact</a></li> -->
       </ul>
 

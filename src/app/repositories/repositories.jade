@@ -9,16 +9,26 @@
 
 
     .row
+      //- .col-md-3.text-center
+      //-   h4 Search
       .col-md-6.col-md-offset-3
-        .form-group
-          label(for="search") Search
-          input(type="text" class="form-control" id="search" ng-model="repositories.search" ng-change="repositories.change()")
+        .input-group
+          span.input-group-addon Search
+          input(type="text" class="form-control" id="search" ng-model="repositories.search" ng-change="repositories.inputChange()")
+      .col-md-3
+        select.form-control(id="filter" ng-model="repositories.filter" ng-change="repositories.inputChange()")
+            option(value="all") All Repositories
+            option(value="mine") My Repositories
+    br
+
+
+
 
 
     .row
       .col-sm-6.col-md-4(ng-repeat="awesomeThing in repositories.awesomeThings | orderBy:'rank'")
         .thumbnail
-          img.pull-right(ng-src='{{awesomeThing.owner.avatar_url}}')
+          img.pull-right.img-circle(ng-src='{{awesomeThing.owner.avatar_url}}')
           .caption
             h4 {{awesomeThing.name}}
             p Owner: {{awesomeThing.owner.login}}

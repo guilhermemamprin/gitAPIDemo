@@ -12,8 +12,9 @@ module testApp {
     }
 
     /* @ngInject */
-    constructor ($state, $scope) {
+    constructor ($state, $scope, $window) {
       this.$state = $state;
+      $scope.$window = $window;
       if (window.localStorage.getItem('authToken') == null) {
         this.authSet = false;
       }
