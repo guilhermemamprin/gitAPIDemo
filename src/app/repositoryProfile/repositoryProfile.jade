@@ -36,7 +36,7 @@
               a(href="{{repository.html_url}}") More...
           .col-md-3
             h4 Issues &nbsp;
-              a(href='#').btn.btn-success New issue
+              a(ui-sref='issueForm({owner : repository.owner.login, repo : repository.name})').btn.btn-success New issue
 
             .list-group-item(ng-repeat="issue in issues ")
               i.glyphicon.glyphicon-exclamation-sign &nbsp;
