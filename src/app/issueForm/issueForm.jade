@@ -5,24 +5,25 @@
       p.lead
         img(src='assets/images/yeoman.png', alt="I'm Yeoman")
         br
-        |       Create new Issue
 
-
-      form(name="issueCreatingForm" ng-submit="issueForm.submitForm(issueCreatingForm.$valid, issue)" novalidate)
-        {{issueForm.repo}}
+      form(name="issueCreatingForm" ng-submit="issueForm.submitForm(issueCreatingForm.$valid, issueForm.issue)" novalidate)
         .container-fluid.well
           .row-fluid
+            h3(ng-if="issueForm.mode") Viewing Issue &nbsp;
+              small{{issueForm.issue.title}}
             .col-md-3
               img.img-circle(src="{{user.avatar_url}}" style="height: 100px; width: 100px")
             .col-md-6
               .form-group
                 label(for="issueNameInput").pull-left Title
-                input(type="text" id="issueNameInput" ng-model="issue.title" placeholder="Title" required).form-control
+                input(type="text" id="issueNameInput" ng-model="issueForm.issue.title" placeholder="Title" required).form-control
               .form-group
-                label(for="issueInput").pull-left Write
-                textarea(rows=5 placeholder="Leave a comment" ng-model="issue.body" required).form-control
-              button(type="submit").btn.btn-default Submit
-
+                label(for="issueInput" ).pull-left Write
+                textarea(rows=5 placeholder="Leave a comment" ng-model="issueForm.issue.body" required).form-control
+               a.btn.btn-danger(ng-click="issueForm.closeIssue()" ng-if="issueForm.mode") Close Issue &nbsp;
+                span.glyphicon.glyphicon-ban-circle
+              button(type="submit").btn.btn-primary Submit &nbsp;
+                span.glyphicon.glyphicon-ok-circle
     hr
     .footer
       p

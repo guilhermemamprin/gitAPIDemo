@@ -24,16 +24,19 @@ module testApp {
     public test;
 
     /* @ngInject */
-    constructor ($stateParams, $http, $scope, $window) {
+    constructor ($stateParams, $http, $scope, $window, HttpService) {
       var login = decodeURIComponent($stateParams.login);
       var _this = this;
       var test=1;
 
       if ( login === $window.localStorage.getItem('username')) {
-        $http.get("https://api.github.com/user" + "?" + $window.localStorage.getItem("authToken"))
-          .then(function(response) {
-            $scope.user = response.data;
+        HttpService.call('GET', 'user').then(function(response) {
+          $scope.user = response.data;
         });
+        // $http.get("https://api.github.com/user" + "?" + $window.localStorage.getItem("authToken"))
+        //   .then(function(response) {
+        //     $scope.user = response.data;
+        // });
 
       $http.get("https://api.github.com/user/orgs" + "?"  + $window.localStorage.getItem("authToken"))
         .then(function(response) {
