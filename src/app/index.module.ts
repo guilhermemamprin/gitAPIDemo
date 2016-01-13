@@ -6,6 +6,7 @@
 /// <reference path="repositories/repositories.controller.ts" />
 /// <reference path="repositoryProfile/repositoryProfile.controller.ts" />
 /// <reference path="userProfile/userProfile.controller.ts" />
+/// <reference path="services/HttpService.ts" />
 /// <reference path="IssueForm/IssueForm.controller.ts" />
 /// <reference path="auth/auth.controller.ts" />
 /// <reference path="../app/components/navbar/navbar.controller.ts" />
@@ -23,6 +24,7 @@ module testApp {
     .controller('RepositoryProfileController', RepositoryProfileController)
     .controller('UserProfileController', UserProfileController)
     .controller('IssueFormController', IssueFormController)
+    .service('HttpService', HttpService)
 
   .config(function ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $locationProvider) {
     $stateProvider
@@ -51,14 +53,14 @@ module testApp {
         url: '/repositoryProfile?full_name',
         templateUrl: 'app/repositoryProfile/repositoryProfile.html',
         controller: 'RepositoryProfileController',
-        controllerAs: 'profile',
+        controllerAs: 'profile'
       })
 
        .state('userProfile', {
         url: '/userProfile?login',
         templateUrl: 'app/userProfile/userProfile.html',
         controller: 'UserProfileController',
-        controllerAs: 'userProfile',
+        controllerAs: 'userProfile'
       })
 
 
@@ -66,14 +68,15 @@ module testApp {
         url: '/issues',
         templateUrl: 'app/issues/issues.html',
         controller: 'IssuesController',
-        controllerAs: 'issues',
+        controllerAs: 'issues'
       })
 
       .state('issueForm', {
-        url: '/issueForm/{owner}/{repo}',
+        url: '/issueForm/{owner}/{repo}?issueNumber',
         templateUrl: 'app/issueForm/issueForm.html',
         controller: 'IssueFormController',
         controllerAs: 'issueForm',
+        params: {mode : false}
       })
 
 

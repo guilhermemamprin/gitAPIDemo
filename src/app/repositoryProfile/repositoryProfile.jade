@@ -39,19 +39,13 @@
               a(ui-sref='issueForm({owner : repository.owner.login, repo : repository.name})').btn.btn-success New issue
 
             .list-group-item(ng-repeat="issue in issues ")
-              i.glyphicon.glyphicon-exclamation-sign &nbsp;
-              b {{issue.state}}
-              br
-              a(href='{{issue.html_url}}') {{issue.title}}
 
+              i.glyphicon.glyphicon-exclamation-sign.pull-left &nbsp;
+                b {{issue.state}}
+              a.pull-right(ui-sref="issueForm({owner : repository.owner.login, repo : repository.name, mode : true, issueNumber : issue.number})") {{issue.title}}
+              br
             .list-group-item
               a(href='{{repository.html_url}}/issues').text-primary More...
-
-
-
-
-
-
 
     hr
     .footer

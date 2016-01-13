@@ -18,45 +18,83 @@ module testApp {
   export class IssueFormController {
     public awesomeThings: Thing[];
     public search: string;
-    private pendingTask: any;
-    private $http: any;
-    private $window: any;
-    private $stateParams: any;
+    public mode;
+    public issueNumber: number;
     public repository;
     public owner;
     public repo;
+    public issue: any;
+
+    private $http: any;
+    private HttpService: any;
+    private $window: any;
+    private $stateParams: any;
+    private $state: any;
 
     submitForm(isValid, issue) {
       if(!isValid) {
         alert("Not valid");
       } else {
         var authToken;
-        var _this = this;
         var params = {};
         params['title'] = issue.title;
         params['body'] = issue.body;
-        this.$http.post(
+        var promise = null;
+
+        if(this.mode){
+          promise = this.HttpService.call('PATCH', "repos/" + this.owner + "/" + this.repo +  "/issues/" + this.issueNumber, params)
+          promise = this.$http.patch(
+            "https://api.github.com/repos/" + this.owner + "/" + this.repo +  "/issues/" + this.issueNumber + "?" + this.$window.localStorage.getItem('authToken'),
+            JSON.stringify(params)
+          );
+        } else {
+          promise = this.$http.post(
             "https://api.github.com/repos/" + this.owner + "/" + this.repo +  "/issues?" + this.$window.localStorage.getItem('authToken'),
             JSON.stringify(params)
-          ).then(function(response) {
-            if(response.status === 201) {
-              _this.$window.location.href = '/';
-              alert('Issue created!');
-            }
-        })
+          );
+        }
+
+        var repoParams = {'full_name' : this.owner + "/" + this.repo };
+        promise.then(() => this.$state.go('repositoryProfile', repoParams,  {reload: true}));
       }
     }
 
+    closeIssue() {
+      var params = {};
+      params['state']  = 'closed';
+      this.$http.patch(
+          "https://api.github.com/repos/" + this.owner + "/" + this.repo +  "/issues/" + this.issueNumber + "?" + this.$window.localStorage.getItem('authToken'),
+          JSON.stringify(params))
+        .then((response)=> {
+           if(response.status === 200) {
+            this.$window.location.href = '/';
+            alert('Issue close.');
+          }
+        });
+    }
+
     /* @ngInject */
-    constructor ($stateParams, $http, $scope, $window) {
+    constructor ($stateParams, $http, $scope, $window, $state, HttpService) {
       var owner = decodeURIComponent($stateParams.owner);
       var repo = decodeURIComponent($stateParams.repo);
-      var _this = this;
+      this.issue = {};
       this.$window = $window;
       this.$http = $http;
+      this.$state = $state;
+      this.HttpService = HttpService;
 
+      this.mode = $stateParams.mode;
+      this.issueNumber = $stateParams.issueNumber;
 
       if(owner != undefined && repo != undefined) {
+        if(this.mode === true && this.issueNumber != null) {
+          $http.get("https://api.github.com/repos/" + owner + "/" + repo +  "/issues/" + this.issueNumber)
+            .then((response)=>{
+              this.issue.title = response.data.title;
+              this.issue.body = response.data.body;
+            })
+        }
+
         $http.get("https://api.github.com/repos/" + owner + "/" + repo + "?" + $window.localStorage.getItem("authToken"))
           .then(function(response) {
             $scope.repo = response.data;
