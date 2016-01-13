@@ -1,0 +1,10 @@
+.container
+  div(ng-include="'app/components/navbar/navbar.html'")
+  .jumbotron.text-center
+    h1 Angular OnBoard
+    p.lead
+      img(src='assets/images/yeoman.png', alt="I'm Yeoman")
+      h2
+        {{header.title}}
+    .container-fluid.well.span6(ui-view)
+

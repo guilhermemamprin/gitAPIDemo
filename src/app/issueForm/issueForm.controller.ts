@@ -43,10 +43,6 @@ module testApp {
 
         if(this.mode){
           promise = this.HttpService.call('PATCH', "repos/" + this.owner + "/" + this.repo +  "/issues/" + this.issueNumber, params)
-          promise = this.$http.patch(
-            "https://api.github.com/repos/" + this.owner + "/" + this.repo +  "/issues/" + this.issueNumber + "?" + this.$window.localStorage.getItem('authToken'),
-            JSON.stringify(params)
-          );
         } else {
           promise = this.$http.post(
             "https://api.github.com/repos/" + this.owner + "/" + this.repo +  "/issues?" + this.$window.localStorage.getItem('authToken'),
